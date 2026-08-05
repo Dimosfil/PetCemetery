@@ -1,0 +1,37 @@
+# Unity generated state
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/[Mm]emoryCaptures/
+
+# Unity template tutorial content, not part of the product
+UnityApp/Assets/TutorialInfo/
+
+# Generated IDE files
+**/*.csproj
+**/*.sln
+**/*.suo
+**/*.user
+**/*.userprefs
+**/.idea/
+**/.vs/
+
+# Prototype runtime data and downloaded artifacts
+PetAvatarPrototype/var/jobs/*
+!PetAvatarPrototype/var/jobs/.gitkeep
+PetAvatarPrototype/artifacts/*
+!PetAvatarPrototype/artifacts/.gitkeep
+
+# Node dependencies if the prototype later adopts packages
+PetAvatarPrototype/node_modules/
+**/__pycache__/
+**/*.pyc
+
+# Local AI runtimes, model caches, and third-party inference sources
+PetAvatarPrototype/.runtime/
+PetAvatarPrototype/.venv-ai/
+PetAvatarPrototype/.model-cache/

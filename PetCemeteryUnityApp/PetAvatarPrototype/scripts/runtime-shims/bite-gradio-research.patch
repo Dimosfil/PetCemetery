@@ -1,0 +1,99 @@
+diff --git a/scripts/gradio_demo.py b/scripts/gradio_demo.py
+index e5e53bb..01c43a2 100644
+--- a/scripts/gradio_demo.py
++++ b/scripts/gradio_demo.py
+@@ -5,5 +4,0 @@ os.environ["CUDA_VISIBLE_DEVICES"]="0"
+-try:
+-    # os.system("pip install --upgrade  torch==1.11.0+cu113 torchvision==0.12.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html")
+-    os.system("pip install --upgrade  torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/cu101/torch_stable.html")
+-except Exception as e:
+-    print(e)
+@@ -147,2 +142 @@ def detect_object(model, img_path_or_img, confidence=0.5, rect_th=2, text_size=0
+-model_bbox = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
+-model_bbox.eval()
++model_bbox = None
+@@ -150,0 +145,4 @@ def run_bbox_inference(input_image):
++    global model_bbox
++    if model_bbox is None:
++        model_bbox = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
++        model_bbox.eval()
+@@ -214 +212 @@ norm_dict = get_norm_dict(data_info=None, device=device)
+-bite_model = BITEInferenceModel(cfg, path_model_file_complete, norm_dict)
++bite_model = BITEInferenceModel(cfg, path_model_file_complete, norm_dict, device=device)
+@@ -242 +240 @@ if not os.path.exists(save_imgs_path):
+-def run_bite_inference(input_image, bbox=None, apply_ttopt=True,  dog_name="dog_model"):
++def run_bite_inference(input_image, bbox=None, apply_ttopt=True, dog_name="dog_model", return_details=False):
+@@ -545,0 +544,37 @@ def run_bite_inference(input_image, bbox=None, apply_ttopt=True,  dog_name="dog_
++    if return_details:
++        prepared_image = input[0].detach().cpu().clone()
++        for channel, mean in zip(prepared_image, stanext_data_info.rgb_mean):
++            channel.add_(mean)
++        prepared_image = np.uint8(np.clip(
++            prepared_image.permute(1, 2, 0).numpy() * 255.0, 0.0, 255.0
++        ))
++        neutral_pose = torch.eye(3, device=device)[None, None, :, :].repeat(
++            optimed_betas.shape[0], optimed_pose_with_glob.shape[1], 1, 1
++        )
++        neutral_verts, _, _ = smal(
++            beta=optimed_betas,
++            betas_limbs=optimed_betas_limbs,
++            pose=neutral_pose,
++            vert_off_compact=optimed_vert_off_compact,
++            trans=torch.zeros_like(optimed_trans),
++            keyp_conf='olive',
++            get_skin=True,
++        )
++        projected_vertices = silh_renderer.project_points(
++            points=smal_verts,
++            focal_lengths=optimed_camera_flength,
++        )
++        _, vertex_visibility = silh_renderer.calculate_vertex_visibility(
++            vertices=smal_verts,
++            faces=faces_prep,
++            focal_lengths=optimed_camera_flength,
++        )
++        return {
++            'glb': result_gltf,
++            'prepared_image': prepared_image,
++            'foreground_mask': target_hg_silh.detach().cpu().numpy(),
++            'neutral_vertices': neutral_verts[0].detach().cpu().numpy(),
++            'faces': faces_prep[0].detach().cpu().numpy(),
++            'projected_vertices': projected_vertices[0].detach().cpu().numpy(),
++            'vertex_visibility': vertex_visibility[0].detach().cpu().numpy(),
++        }
+@@ -667 +680 @@ demo = gr.Interface(
+-    cache_examples=True,
++    cache_examples=False,
+@@ -671 +684,2 @@ demo = gr.Interface(
+-demo.launch()   # share=True)
+\ No newline at end of file
++if __name__ == "__main__":
++    demo.launch()   # share=True)
+diff --git a/src/graph_networks/graphcmr/utils_mesh.py b/src/graph_networks/graphcmr/utils_mesh.py
+index 6a86a3e..0fd2770 100644
+--- a/src/graph_networks/graphcmr/utils_mesh.py
++++ b/src/graph_networks/graphcmr/utils_mesh.py
+@@ -42,2 +42 @@ def adjmat_sparse(adjmat, nsize=1):
+-    for i in range(adjmat.shape[0]):
+-        adjmat[i,i] = 1
++    adjmat.setdiag(1)
+@@ -68 +67,3 @@ class Mesh(object):
+-                 num_downsampling=1, nsize=1, body_model=None, device=torch.device('cuda')):
++                 num_downsampling=1, nsize=1, body_model=None, device=None):
++        if device is None:
++            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+diff --git a/src/priors/normalizing_flow_prior/normalizing_flow_prior.py b/src/priors/normalizing_flow_prior/normalizing_flow_prior.py
+index 5cf60fe..0f488b4 100644
+--- a/src/priors/normalizing_flow_prior/normalizing_flow_prior.py
++++ b/src/priors/normalizing_flow_prior/normalizing_flow_prior.py
+@@ -51 +51,2 @@ class NormalizingFlowPrior(nn.Module):
+-        pretrained_dict = torch.load(weight_path)['model_state_dict']
++        load_device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
++        pretrained_dict = torch.load(weight_path, map_location=load_device)['model_state_dict']
+diff --git a/src/test_time_optimization/bite_inference_model_for_ttopt.py b/src/test_time_optimization/bite_inference_model_for_ttopt.py
+index 28aeb8a..3b3eb62 100644
+--- a/src/test_time_optimization/bite_inference_model_for_ttopt.py
++++ b/src/test_time_optimization/bite_inference_model_for_ttopt.py
+@@ -101 +101 @@ class BITEInferenceModel():        #(nn.Module):
+-        checkpoint_complete = torch.load(path_model_file_complete)
++        checkpoint_complete = torch.load(path_model_file_complete, map_location=self.device)

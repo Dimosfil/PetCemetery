@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Прототип создания rigged 3D-питомца по фотографиям." />
+    <title>Pet Avatar Prototype</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">PET CEMETERY · R&amp;D</p>
+          <h1>Создайте тестового<br /><span>3D-питомца</span></h1>
+          <p class="hero__lead">
+            Загрузите несколько фотографий собаки. Прототип сформирует rigged GLB,
+            подготовит ZIP-пакет и позволит открыть результат в Unity.
+          </p>
+          <p class="hero__note">
+            Для BITE первой выбирайте фотографию, где собака целиком видна сбоку;
+            этот снимок определяет форму и основную текстуру текущей модели.
+          </p>
+        </div>
+        <div class="hero__badge" aria-label="Этап прототипирования">
+          <span>01</span>
+          <strong>Фото → Unity</strong>
+          <small>интеграционный контур</small>
+        </div>
+      </header>
+
+      <section class="workspace" aria-labelledby="upload-title">
+        <div class="workspace__form">
+          <div class="section-heading">
+            <p class="step">Шаг 1</p>
+            <h2 id="upload-title">Добавьте фотографии</h2>
+            <p>Подойдут JPEG, PNG и WebP. Недостающие ракурсы не блокируют прототип.</p>
+          </div>
+
+          <form id="upload-form">
+            <input id="photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
+            <button id="drop-zone" class="drop-zone" type="button">
+              <span class="drop-zone__icon" aria-hidden="true">＋</span>
+              <strong>Перетащите фото сюда</strong>
+              <span>или нажмите, чтобы выбрать файлы</span>
+              <small>до 20 фотографий · максимум 12 МБ каждая</small>
+            </button>
+
+            <div id="selection" class="selection" hidden>
+              <div>
+                <strong id="selection-count">0 фотографий</strong>
+                <span id="selection-size"></span>
+              </div>
+              <button id="clear-selection" class="text-button" type="button">Очистить</button>
+            </div>
+
+            <div id="thumbs" class="thumbs" aria-live="polite"></div>
+
+            <div class="coat-row">
+              <div>
+                <label for="coat-color">Предполагаемый основной окрас</label>
+                <small>Вычисляется локально в браузере и влияет на тестовую модель.</small>
+              </div>
+              <input id="coat-color" name="coatColor" type="color" value="#9a6846" />
+            </div>
+
+            <button id="submit-button" class="primary-button" type="submit" disabled>
+              Создать пакет для Unity
+              <span aria-hidden="true">→</span>
+            </button>
+          </form>
+        </div>
+
+        <aside class="workspace__status" aria-live="polite">
+          <div id="empty-state" class="empty-state">
+            <div class="dog-mark" aria-hidden="true">
+              <span class="dog-mark__ear dog-mark__ear--left"></span>
+              <span class="dog-mark__ear dog-mark__ear--right"></span>
+              <span class="dog-mark__face"></span>
+              <span class="dog-mark__nose"></span>
+            </div>
+            <h2>Пакет появится здесь</h2>
+            <p>После обработки можно будет просмотреть результат и скачать ZIP.</p>
+          </div>
+
+          <div id="job-state" class="job-state" hidden>
+            <div class="job-state__top">
+              <p class="step">Шаг 2</p>
+              <span id="job-provider" class="provider-pill"></span>
+            </div>
+            <h2 id="job-title">Обрабатываем фотографии</h2>
+            <p id="job-message"></p>
+            <div class="progress" role="progressbar" aria-label="Прогресс обработки" aria-valuemin="0" aria-valuemax="100">
+              <span id="progress-bar"></span>
+            </div>
+            <div class="progress-meta">
+              <span id="progress-value">0%</span>
+              <span id="job-id"></span>
+            </div>
+
+            <img id="preview" class="preview" alt="Превью созданного 3D-питомца" hidden />
+
+            <div id="download-actions" class="download-actions" hidden>
+              <a id="download-link" class="primary-button primary-button--download" href="#" download>
+                Скачать ZIP-пакет
+                <span aria-hidden="true">↓</span>
+              </a>
+              <button id="new-job" class="secondary-button" type="button">Создать ещё один</button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="footer-note">
+        <strong>Активный provider:</strong>
+        <span id="active-provider">проверяем конфигурацию…</span>
+      </footer>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

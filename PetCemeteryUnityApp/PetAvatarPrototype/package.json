@@ -1,0 +1,20 @@
+{
+  "name": "pet-avatar-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone photo upload to rigged GLB prototype for Pet Cemetery.",
+  "scripts": {
+    "start": "node src/main.js",
+    "start:bite:research": "node scripts/start-bite-research.js",
+    "check:bite:research": "node scripts/start-bite-research.js --check",
+    "dev": "node --watch src/main.js",
+    "sample": "node src/generate-sample.js",
+    "sf3d:job": "node scripts/run-canonical-sf3d-job.js",
+    "test": "node --test test/*.test.js",
+    "check": "node --check src/main.js && node --check scripts/start-bite-research.js && node --check public/app.js && node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Изолированный прототип объяснимого профиля характера питомца."
+    />
+    <title>Character Lab — профиль питомца</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Character Lab — в начало">
+        <span class="brand-mark" aria-hidden="true">CL</span>
+        <span>Character Lab</span>
+      </a>
+      <div class="stage-pill"><span></span> Прототип · photo + video vision</div>
+    </header>
+
+    <main id="top">
+      <section class="hero shell">
+        <div>
+          <p class="eyebrow">Multimodal character evidence</p>
+          <h1>Не придумать характер.<br /><em>Узнать своего питомца.</em></h1>
+          <p class="hero-copy">
+            Загрузите фотографии и поведенческие видео. Система извлечёт кадры с таймкодами,
+            сначала опишет видимые действия и только затем соберёт осторожную гипотезу характера
+            со ссылками на конкретные источники.
+          </p>
+        </div>
+        <aside class="principle-card">
+          <span class="card-index">01</span>
+          <strong>Никакой оценки по внешности</strong>
+          <p>Фото подтверждает идентичность и позу. Для устойчивых черт нужна последовательность действий на видео.</p>
+        </aside>
+      </section>
+
+      <section class="workspace shell">
+        <form id="intake-form" class="panel form-panel" enctype="multipart/form-data">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Медиаисточники</p>
+              <h2>Фото и видео</h2>
+            </div>
+            <span class="step-count">1 / 3</span>
+          </div>
+
+          <div class="identity-grid">
+            <label>
+              <span>Имя питомца</span>
+              <input name="petName" maxlength="80" autocomplete="off" placeholder="Например, Бакс" required />
+            </label>
+            <label>
+              <span>Вид</span>
+              <select name="species" required>
+                <option value="">Выберите</option>
+                <option value="dog">Собака</option>
+                <option value="cat">Кошка</option>
+                <option value="other">Другой</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="upload-grid">
+            <label class="upload-card">
+              <span class="upload-icon" aria-hidden="true">▧</span>
+              <strong>Фотографии</strong>
+              <span>До 12 JPG, PNG или WEBP</span>
+              <input name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple />
+            </label>
+            <label class="upload-card featured">
+              <span class="upload-icon" aria-hidden="true">▶</span>
+              <strong>Видео поведения</strong>
+              <span>До 3 роликов, максимум 5 минут каждый</span>
+              <input name="videos" type="file" accept="video/mp4,video/quicktime,video/webm,video/x-matroska,video/x-msvideo" multiple />
+            </label>
+          </div>
+          <div id="media-selection" class="media-selection">Медиа ещё не выбраны.</div>
+
+          <label class="long-field">
+            <span>Контекст съёмки <small>необязательно, не считается доказательством</small></span>
+            <textarea
+              name="ownerContext"
+              rows="4"
+              maxlength="8000"
+              placeholder="Например: знакомый дом, рядом хозяин; в ролике появляется новая игрушка…"
+            ></textarea>
+          </label>
+
+          <label class="consent-row">
+            <input name="mediaConsent" type="checkbox" required />
+            <span>Разрешаю отправить выбранные медиа настроенному AI-провайдеру для этого анализа. Исходные файлы не сохраняются прототипом после запроса.</span>
+          </label>
+
+          <div id="form-message" class="message" role="status" aria-live="polite"></div>
+          <button class="primary-button" type="submit">
+            <span>Проанализировать фото и видео</span>
+            <span aria-hidden="true">→</span>
+          </button>
+          <p class="local-note">Профиль и evidence сохраняются локально. API-вызов использует токены; точный расход появится в результате.</p>
+        </form>
+
+        <section id="result-panel" class="panel result-panel empty-state" aria-live="polite">
+          <div class="empty-symbol" aria-hidden="true">◇</div>
+          <p class="eyebrow">Результат</p>
+          <h2>Здесь появится гипотеза</h2>
+          <p>Сначала появятся наблюдения по кадрам. Черты будут показаны только при достаточной поведенческой последовательности.</p>
+        </section>
+      </section>
+    </main>
+
+    <footer class="shell">
+      <span>Pet Cemetery · isolated R&D prototype</span>
+      <span>Не медицинская и не этологическая диагностика</span>
+    </footer>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

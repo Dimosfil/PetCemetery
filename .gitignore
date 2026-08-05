@@ -1,0 +1,54 @@
+# Local/generated AI-agent memory and runtime noise
+tools/project-memory/*.sqlite
+tools/project-memory/*.sqlite-*
+tools/project-memory/*.db
+tools/project-memory/*.db-*
+tools/project-memory/vector-index/
+tools/project-memory/chroma/
+tools/project-memory/embedding-cache/
+tools/project-memory/semantic-corpus*.jsonl
+tools/project-memory/devops.local.json
+tools/summary/*.tmp
+tools/deploy/ftp.local.json
+tools/deploy/prod.local.json
+tools/deploy/deploy-gateway.local.json
+*.log
+
+# Application dependencies and build output
+node_modules/
+.next/
+coverage/
+.tmp/
+*.tsbuildinfo
+
+# Runtime configuration and private uploads
+.env
+.env.*
+!.env.example
+client_secret_*.apps.googleusercontent.com.json
+data/uploads/
+/photo/
+/models/
+
+# Model payloads and generated transfer bundles
+*.safetensors
+*.ckpt
+*.pth
+*.pt
+*.onnx
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# Local editor and OS noise
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
